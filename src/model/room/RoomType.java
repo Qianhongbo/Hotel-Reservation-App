@@ -1,6 +1,6 @@
 package model.room;
 
-enum RoomType{
+public enum RoomType{
     SINGLE,
     DOUBLE
 }
