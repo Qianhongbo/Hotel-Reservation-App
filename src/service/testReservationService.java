@@ -8,7 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class testService{
+public class testReservationService {
     public static void main(String[] args) throws ParseException {
         String checkIn = "26-09-1980";
         String checkOut = "28-09-1980";
@@ -22,7 +22,7 @@ public class testService{
         Date anotherDate1 = formatter.parse(anotherDateStr1);
         Date anotherDate2 = formatter.parse(anotherDateStr2);
 //
-        ReservationService ReservationService = service.ReservationService.getInstance();
+        ReservationService ReservationService = service.ReservationService.getSINGLETON();
         Customer first = new Customer("Lindong", "Ye","lye@ucsd.edu");
         RoomType enumeration1 = RoomType.DOUBLE;
         Room firstRoom = new Room("311", 951.50, enumeration1);

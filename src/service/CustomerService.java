@@ -9,6 +9,11 @@ import java.util.Map;
 public class CustomerService {
 
     private static CustomerService SINGLETON = new CustomerService();
+
+    public static CustomerService getSINGLETON() {
+        return SINGLETON;
+    }
+
     private Map<String, Customer> customers = new HashMap<>();
     private CustomerService(){};
 
