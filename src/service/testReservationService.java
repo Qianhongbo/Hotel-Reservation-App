@@ -21,7 +21,7 @@ public class testReservationService {
         Date checkOutDate = formatter.parse(checkOut);
         Date anotherDate1 = formatter.parse(anotherDateStr1);
         Date anotherDate2 = formatter.parse(anotherDateStr2);
-//
+
         ReservationService ReservationService = service.ReservationService.getSINGLETON();
         Customer first = new Customer("Lindong", "Ye","lye@ucsd.edu");
         RoomType enumeration1 = RoomType.DOUBLE;

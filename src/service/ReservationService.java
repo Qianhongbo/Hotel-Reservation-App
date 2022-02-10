@@ -26,7 +26,6 @@ public class ReservationService {
         return rooms.get(roomId);
     }
 
-
     public Reservation reserveAroom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate){
         Reservation reservation = new Reservation(customer, room, checkInDate, checkOutDate);
         //check whether the customer has reservations
@@ -42,15 +41,32 @@ public class ReservationService {
     }
 
     public Collection<IRoom> findRooms(Date checkInDate, Date checkOutDate){
-        Collection<Reservation> allReservations = getAllReservations();
         Collection<IRoom> availableRooms = new LinkedList<>();
-        //find the reserved rooms between checkInDate and checkOutDate
-        for(Reservation reservation : allReservations){
-            if (checkInDate.before(reservation.getCheckInDate()) && checkOutDate.after(reservation.getCheckOutDate())){
-                availableRooms.add(reservation.getRoom());
+        Collection<IRoom> reservedRooms = findReservedRooms(checkInDate, checkOutDate);
+        for (IRoom room : rooms.values()) {
+            if (!reservedRooms.contains(room)) {
+                availableRooms.add(room);
             }
         }
         return availableRooms;
+    }
+
+    public Collection<IRoom> findReservedRooms(Date checkInDate, Date checkOutDate) {
+        Collection<Reservation> allReservations = getAllReservations();
+        Collection<IRoom> reservedRooms = new LinkedList<>();
+        //find the reserved rooms between checkInDate and checkOutDate
+        for(Reservation reservation : allReservations){
+            if ((checkInDate.after(reservation.getCheckInDate()) || checkInDate.equals(reservation.getCheckInDate())) &&
+                    checkOutDate.before(reservation.getCheckOutDate()) ||
+                    checkOutDate.equals(reservation.getCheckOutDate())){
+                reservedRooms.add(reservation.getRoom());
+            }
+        }
+        return reservedRooms;
+    }
+
+    public Collection<IRoom> getAllRooms() {
+        return rooms.values();
     }
 
     private Collection<Reservation> getAllReservations(){
@@ -75,5 +91,6 @@ public class ReservationService {
                 System.out.println(room + "\n");
             }
         }
+        System.out.println();
     }
 }
