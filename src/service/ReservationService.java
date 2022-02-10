@@ -8,6 +8,7 @@ import java.util.*;
 
 public class ReservationService {
     private static ReservationService SINGLETON = new ReservationService();
+    private ReservationService(){};
     public static ReservationService getSINGLETON(){
         return SINGLETON;
     }

@@ -41,4 +41,6 @@ public class Reservation {
                 "checkInDate: " + checkInDate + "\n" +
                 "checkOutDate: " + checkOutDate + "\n";
     }
+
+
 }
