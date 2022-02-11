@@ -9,6 +9,7 @@ import model.room.IRoom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class MainMenu {
 
@@ -66,41 +67,61 @@ public class MainMenu {
         }
 
         System.out.println();
-        System.out.println("These are all available rooms!");
         Collection<IRoom> availableRooms = HotelResource.findARoom(checkInDate, checkOutDate);
+
+        while (availableRooms.isEmpty()) {
+            System.out.println("There are no available rooms between these dates." + "\n"
+            + "These are my recommendation:");
+            Calendar   calendar = new GregorianCalendar();
+            assert checkInDate != null;
+            calendar.setTime(checkInDate);
+            calendar.add(Calendar.DATE,7);
+            checkInDate=calendar.getTime();
+            assert checkOutDate != null;
+            calendar.setTime(checkOutDate);
+            calendar.add(Calendar.DATE,7);
+            checkOutDate = calendar.getTime();
+            availableRooms = HotelResource.findARoom(checkInDate, checkOutDate);
+            System.out.println("Available rooms from: " + checkInDate + " to " + checkOutDate);
+        }
+
         for (IRoom room: availableRooms) {
             System.out.println(room);
         }
 
         String email = "name@domain.com";
-        if (!availableRooms.isEmpty()) {
-            System.out.println("Do you have an account? Select (y/n)");
-            char userChoice = scanner.nextLine().trim().charAt(0);
-            if (userChoice == 'y') {
-                System.out.println("Enter your Email: name@domain.com");
-                String tempEmail = scanner.nextLine();
-                Customer customer = AdminResource.getCustomer(tempEmail);
-                if (customer == null) {
-                    email = createAnAccount(scanner);
-                } else {
-                    email = tempEmail;
-                }
-            } else if (userChoice == 'n') {
+        System.out.println("Do you have an account? Select (y/n)");
+        char userChoice = scanner.nextLine().trim().charAt(0);
+        if (userChoice == 'y') {
+            System.out.println("Enter your Email: name@domain.com");
+            String tempEmail = scanner.nextLine();
+            Customer customer = AdminResource.getCustomer(tempEmail);
+            if (customer == null) {
                 email = createAnAccount(scanner);
             } else {
-                System.out.println("Illegal input! Please input y/n.");
-                return;
+                email = tempEmail;
             }
-            System.out.println("What room number would you like to reserve?");
-            while (!scanner.hasNextInt()) {
-                System.out.println("Please input a room number.");
-                scanner.next();
-            }
-            IRoom theRoom = HotelResource.getRoom(scanner.nextLine());
-            Reservation theReservation =  HotelResource.bookARoom(email, theRoom, checkInDate, checkOutDate);
-            System.out.println(theReservation);
+        } else if (userChoice == 'n') {
+            email = createAnAccount(scanner);
         } else {
-            System.out.println("No rooms available." + "\n");
+            System.out.println("Illegal input! Please input y/n.");
+            return;
+        }
+        System.out.println("What room number would you like to reserve?");
+        while (!scanner.hasNextInt()) {
+            System.out.println("Please input a room number.");
+            scanner.next();
+        }
+
+        while (true) {
+            IRoom theRoom = HotelResource.getRoom(scanner.nextLine());
+            if (availableRooms.contains(theRoom)) {
+                Reservation theReservation =  HotelResource.bookARoom(email, theRoom, checkInDate, checkOutDate);
+                System.out.println(theReservation);
+                break;
+            } else {
+                System.out.println("The room number is not valid. Please input again.");
+            }
         }
     }
 
@@ -126,7 +147,12 @@ public class MainMenu {
         System.out.println("Enter your Email: name@domain.com");
         String email = scanner.nextLine();
 
-        HotelResource.createACustomer(email, firstName, lastName);
+        try {
+            HotelResource.createACustomer(email, firstName, lastName);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            return null;
+        }
         System.out.println();
         System.out.println("Name: " + firstName + " " + lastName + ", Email: " + email);
         System.out.println();

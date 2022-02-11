@@ -46,7 +46,8 @@ public class Room implements IRoom{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
-        return Objects.equals(roomNumber, room.roomNumber) && Objects.equals(price, room.price) && enumeration == room.enumeration;
+        return Objects.equals(roomNumber, room.roomNumber) && Objects.equals(price, room.price)
+                && enumeration == room.enumeration;
     }
 
     @Override

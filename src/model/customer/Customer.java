@@ -1,19 +1,20 @@
 package model.customer;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Customer {
 
-    private String firstName;
-    private String lastName;
-    private String email;
+    private final String firstName;
+    private final String lastName;
+    private final String email;
 
     //if email is not valid, throw an error
-    private void isValidEmail(String email){
+    private void isValidEmail(String email) throws IllegalArgumentException {
         String emailFormat = "^(.+)@(.+).(.+)$";
         Pattern pattern = Pattern.compile(emailFormat);
        if (!pattern.matcher(email).matches()){
-           throw new IllegalArgumentException();
+           throw new IllegalArgumentException("Invalid Email! Please try again." + "\n");
        }
     }
 
@@ -32,4 +33,19 @@ public class Customer {
     public String toString() {
         return "Name: " + firstName + " " + lastName + ", email: " + email;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return Objects.equals(firstName, customer.firstName) && Objects.equals(lastName, customer.lastName)
+                && Objects.equals(email, customer.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, email);
+    }
+
 }

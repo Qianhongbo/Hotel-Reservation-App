@@ -7,16 +7,15 @@ import model.room.IRoom;
 import java.util.*;
 
 public class ReservationService {
-    private static ReservationService SINGLETON = new ReservationService();
-    private ReservationService(){};
+    private static final ReservationService SINGLETON = new ReservationService();
     public static ReservationService getSINGLETON(){
         return SINGLETON;
     }
 
     //rooms store the roomNumber and rooms that have been reserved
-    private Map<String, IRoom> rooms = new HashMap<>();
+    private final Map<String, IRoom> rooms = new HashMap<>();
     //reservations store the customers' email to identify customers, and the reservation a customer made
-    private Map<String, Collection<Reservation>> reservations= new HashMap<>();
+    private final Map<String, Collection<Reservation>> reservations= new HashMap<>();
 
     //add a room to reserved rooms
     public void addRoom(IRoom room){
@@ -68,6 +67,14 @@ public class ReservationService {
 
     public Collection<IRoom> getAllRooms() {
         return rooms.values();
+    }
+
+    // A default function!
+    void printAllRooms() {
+        Collection<IRoom> allRooms = getAllRooms();
+        for (IRoom room: allRooms) {
+            System.out.print(room);
+        }
     }
 
     private Collection<Reservation> getAllReservations(){
